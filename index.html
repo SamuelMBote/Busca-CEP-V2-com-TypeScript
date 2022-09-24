@@ -11,7 +11,140 @@
 </head>
 
 <body>
+    <header>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="https://bulma.io">
+                    <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, and modern CSS framework based on Flexbox" width="112" height="28">
+                </a>
 
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+        </nav>
+    </header>
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title" id="exibeCEP">
+                Hero title
+            </p>
+            <p class="subtitle">
+                Voce está visualizando as informaçoes do CEP acima
+            </p>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="field has-addons has-addons-centered">
+                <p class="control">
+                    <span class="select">
+                        <select id="opcoesBusca">
+                        </select>
+                    </span>
+                </p>
+                <p class="control">
+                    <input class="input" type="text" placeholder="Insira seu CEP" id="cep" maxlength="9">
+                </p>
+                <p class="control">
+                    <a class="button is-primary" id="buscar">
+                        Buscar
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="is-horizontal">
+                <div class="field-body">
+
+                    <div class="field">
+                        <label class="label">Logradouro</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="Logradouro" id="logradouro" readonly>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Complemento</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Complemento" id="complemento" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-body">
+
+                    <div class="field">
+                        <label class="label">Bairro</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="Bairro" id="bairro" readonly>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Localidade</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Localidade" id="localidade" readonly>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">UF</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="UF" id="uf" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-body">
+
+
+                    <div class="field">
+                        <label class="label">IBGE</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="IBGE" id="ibge" readonly>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">GIA</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="GIA" id="gia" readonly>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">DDD</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="DDD" id="ddd" readonly>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Siafi</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Siafi" id="siafi" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <article class="panel is-primary" id="listaBuscados">
+                <p class="panel-heading">
+                    Buscados anteriormente
+                </p>
+
+            </article>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Busca CEP v2</strong> by <a href="https://github.com/SamuelMBote/">SamuelMBote</a>. Quebrando a cabeça com TypeScript</a>.
+            </p>
+        </div>
+    </footer>
 </body>
 
 </html>
