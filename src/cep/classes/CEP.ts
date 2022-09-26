@@ -1,5 +1,4 @@
 import ICEP from '../interfaces/ICEP';
-import consultaAPI from '../functions/consultaAPI';
 
 export default class CEP implements ICEP {
   public consultaRetornada: Promise<string | object>;
@@ -14,6 +13,7 @@ export default class CEP implements ICEP {
   ddd: number;
   siafi: number;
   erro?: boolean;
+  
   constructor(informacoes: ICEP) {
     this.cep = informacoes.erro ? 'NÃO EXISTE' : informacoes.cep;
     this.logradouro = informacoes.erro ? 'NÃO EXISTE' : informacoes.logradouro;

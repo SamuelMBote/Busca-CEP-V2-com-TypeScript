@@ -1,43 +1,6 @@
 import ICEP from '../interfaces/ICEP';
-const listaCEP: ICEP[] = [
-  {
-    cep: '01001-000',
-    logradouro: 'Praça da Sé',
-    complemento: 'lado ímpar',
-    bairro: 'Sé',
-    localidade: 'São Paulo',
-    uf: 'SP',
-    ibge: 3550308,
-    gia: 1004,
-    ddd: 11,
-    siafi: 7107,
-  },
-  {
-    cep: '32370-190',
-    logradouro: 'Rua AB',
-    complemento: 'lado ímpar',
-    bairro: 'Sé',
-    localidade: 'São Paulo',
-    uf: 'SP',
-    ibge: 3550308,
-    gia: 1004,
-    ddd: 11,
-    siafi: 7107,
-  },
-  {
-    cep: '00001-000',
-    logradouro: 'Rua dos Bobos Numero Zero',
-    complemento: 'lado ímpar',
-    bairro: 'Sé',
-    localidade: 'São Paulo',
-    uf: 'SP',
-    ibge: 3550308,
-    gia: 1004,
-    ddd: 11,
-    siafi: 7107,
-  },
-];
-export default class Tela {
+
+export default class ExibeTela {
   private exibeCEP: HTMLParagraphElement;
   private exibeLogradouro: HTMLInputElement;
   private exibeComplemento: HTMLInputElement;
@@ -49,11 +12,9 @@ export default class Tela {
   private exibeDDD: HTMLInputElement;
   private exibeSIAFI: HTMLInputElement;
   private listaBuscados: HTMLElement;
-  constructor(cep: ICEP) {
+
+  constructor() {
     this.adicionaCampos();
-    this.mostraCEPSelecionado(cep);
-    this.listaCEP(listaCEP);
-    this.adicionaEventoLista();
   }
 
   private adicionaCampos(): void {
@@ -68,6 +29,7 @@ export default class Tela {
     this.exibeDDD = document.querySelector('#ddd');
     this.exibeSIAFI = document.querySelector('#siafi');
     this.listaBuscados = document.querySelector('#listaBuscados');
+
     return;
   }
   private mostraCEPSelecionado(cep: ICEP) {
@@ -81,18 +43,48 @@ export default class Tela {
     this.exibeGIA.value = cep.gia.toString();
     this.exibeDDD.value = cep.ddd.toString();
     this.exibeSIAFI.value = cep.siafi.toString();
+    return cep;
   }
-  private listaCEP(lista: ICEP[]) {
-    lista.forEach((cep) => {
-      const panelBlock = document.createElement('a');
-      panelBlock.classList.add('panel-block');
-      panelBlock.innerText = `${cep.cep}`;
-      return this.listaBuscados.appendChild(panelBlock);
-    });
+  public limparCEPSelecionado() {
+    this.exibeCEP.innerText = '';
+    this.exibeLogradouro.value = '';
+    this.exibeComplemento.value = '';
+    this.exibeBairro.value = '';
+    this.exibeLocalidade.value = '';
+    this.exibeUF.value = '';
+    this.exibeIBGE.value = '';
+    this.exibeGIA.value = '';
+    this.exibeDDD.value = '';
+    this.exibeSIAFI.value = '';
+    return;
+  }
+  private listarAnteriores(cep: ICEP) {
+    const panelBlock = document.createElement('a');
+    panelBlock.classList.add('panel-block');
+    panelBlock.innerText = cep.cep;
+    this.listaBuscados.appendChild(panelBlock);
+    return;
   }
 
-  adicionaEventoLista(): void {
-    const ceps = this.listaBuscados.querySelectorAll('a');
-    ceps[0].classList.add('is-active');
+  onClick(novoCEP: ICEP) {
+    this.mostraCEPSelecionado(novoCEP);
+    this.listarAnteriores(novoCEP);
+  }
+  onInit() {
+    let listaCEPSBuscados: ICEP[] = JSON.parse(
+      localStorage.getItem('cepsBuscadosAnterior'),
+    );
+    listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
+    if (listaCEPSBuscados && listaCEPSBuscados.length >= 1) {
+      listaCEPSBuscados.reverse().forEach((cep): HTMLAnchorElement => {
+        const panelBlock = document.createElement('a');
+        panelBlock.classList.add('panel-block');
+        panelBlock.innerText = cep.cep;
+        this.listaBuscados.appendChild(panelBlock);
+        return panelBlock;
+      });
+      const ultimoItemBuscado = listaCEPSBuscados.length - 1;
+      this.mostraCEPSelecionado(listaCEPSBuscados[ultimoItemBuscado]);
+    }
   }
 }

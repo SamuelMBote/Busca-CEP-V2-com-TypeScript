@@ -1,22 +1,65 @@
-export default function consultaAPI(cep: string, opcao: string): Promise<any> {
-  let retorno: Promise<any> = fetch(`https://viacep.com.br/ws/${cep}/${opcao}/`)
-    .then((resposta) => {
-      let dadosRecebidos: Promise<any>;
-      if (resposta.ok && opcao == 'json') {
-        dadosRecebidos = resposta.json();
-        return dadosRecebidos;
-      } else if (resposta.ok && opcao == 'xml') {
-        dadosRecebidos = resposta.text();
-        return dadosRecebidos;
-      } else if (resposta.ok && opcao == 'jsonp') {
-        throw new TypeError('Ainda não conseguimos tratar esse resultado');
+import CEP from '../classes/CEP';
+import ExibeTela from '../classes/ExibeTela';
+import ICEP from '../interfaces/ICEP';
+const tela = new ExibeTela();
+
+export default function consultaAPI(cep: string, opcao: string) {
+  fetch(`https://viacep.com.br/ws/${cep}/${opcao}/`)
+    .then((resultado) => {
+      let retornoBusca: Promise<any>;
+      let CEP: ICEP;
+      if (resultado.ok && opcao == 'json') {
+        retornoBusca = resultado.json();
+      } else if (resultado.ok && opcao == 'xml') {
+        retornoBusca = resultado.text();
+      } else if (resultado.ok && opcao == 'jsonp') {
+        console.log('Dados ainda nao podem ser tratados');
       }
+      return retornoBusca;
     })
-    .then((dadosRecebidos) => {
-      return (retorno = dadosRecebidos);
+    .then((retornoBusca) => {
+      let CEPRetornado: ICEP;
+      let xml: XMLDocument;
+      if (opcao == 'json') {
+        CEPRetornado = retornoBusca;
+        retornoBusca.erro ? (CEPRetornado.erro = true) : CEPRetornado;
+      } else if (opcao == 'xml') {
+        xml = new window.DOMParser().parseFromString(retornoBusca, 'text/xml');
+        CEPRetornado = {
+          cep: xml.documentElement.querySelector('cep').innerHTML,
+          logradouro: xml.documentElement.querySelector('logradouro').innerHTML,
+          complemento:
+            xml.documentElement.querySelector('complemento').innerHTML,
+          bairro: xml.documentElement.querySelector('bairro').innerHTML,
+          localidade: xml.documentElement.querySelector('localidade').innerHTML,
+          uf: xml.documentElement.querySelector('uf').innerHTML,
+          ibge: Number(xml.documentElement.querySelector('ibge').innerHTML),
+          gia: Number(xml.documentElement.querySelector('gia').innerHTML),
+          ddd: Number(xml.documentElement.querySelector('ddd').innerHTML),
+          siafi: Number(xml.documentElement.querySelector('siafi').innerHTML),
+          erro: xml.documentElement.querySelector('erro') ? true : false,
+        };
+      }
+      return CEPRetornado;
     })
-    .catch((erro) => console.log(erro))
-    .finally(() => retorno);
-  console.log(retorno);
-  return retorno;
+    .then((CEPRetornado: ICEP) => {
+      let listaCEPSBuscados: ICEP[] = JSON.parse(
+        localStorage.getItem('cepsBuscadosAnterior'),
+      );
+      listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
+      const novoCEP = new CEP(CEPRetornado);
+      tela.onClick(novoCEP);
+
+      listaCEPSBuscados.push(novoCEP);
+
+      localStorage.setItem(
+        'cepsBuscadosAnterior',
+        JSON.stringify(listaCEPSBuscados),
+      );
+      return;
+    })
+    .catch((e) => {
+      throw new Error('Erro na Busca');
+    })
+    .finally(() => {});
 }
