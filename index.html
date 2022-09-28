@@ -26,6 +26,11 @@
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
+                    <a href="#" id="dataHora">
+
+                    </a>
+                </div>
+                <div class="navbar-item">
                     <div class="buttons">
                         <button class="button is-primary" id="limpaTela">
                             <strong>Limpar Tela</strong>
@@ -40,7 +45,7 @@
     <section class="hero">
         <div class="hero-body">
             <p class="title" id="exibeCEP">
-                Hero title
+                00000-000
             </p>
             <p class="subtitle">
                 Voce está visualizando as informaçoes do CEP acima
@@ -145,6 +150,7 @@
                 <p class="panel-heading message-header">
                     Buscados anteriormente
                     <button class="delete is-large" id="deletaTodos"></button>
+
                 </p>
 
             </article>
@@ -158,5 +164,20 @@
         </div>
     </footer>
 </body>
+<div class="modal" id="modalAviso">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Histórico removido com sucesso!</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <p id="modalMensagem">Todos os CEP buscados anteriormente foram deletados</p>
+        </section>
+        <footer class="modal-card-foot">
+
+        </footer>
+    </div>
+</div>
 
 </html>

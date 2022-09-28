@@ -1,4 +1,6 @@
+import dataHora from '../functions/dataHora';
 import ICEP from '../interfaces/ICEP';
+import modalInit from '../functions/modalInit';
 
 export default class ExibeTela {
   private exibeCEP: HTMLParagraphElement;
@@ -12,10 +14,12 @@ export default class ExibeTela {
   private exibeDDD: HTMLInputElement;
   private exibeSIAFI: HTMLInputElement;
   private listaBuscados: HTMLElement;
+  private exibeDataHora: HTMLAnchorElement;
 
   constructor() {
     this.adicionaCampos();
-    this.exibeClimaTempo();
+    this.dataHora();
+    modalInit();
   }
 
   private adicionaCampos(): void {
@@ -71,15 +75,27 @@ export default class ExibeTela {
     return;
   }
 
-  private exibeClimaTempo() {
-    function teste() {
-      console.log('teste');
-    }
-    const verificacao = setInterval(() => {
-      teste();
-    }, 1000);
+  private dataHora() {
+    this.exibeDataHora = document.querySelector('#dataHora');
+    const verificacao = setInterval(
+      () => (this.exibeDataHora.innerText = dataHora()),
+      1000,
+    );
   }
 
+  mensagemErro(mensagem: string, titulo: string, tipoAviso: string = 'aviso') {
+    const modal: HTMLDivElement = document.querySelector('#modalAviso');
+    const modalTitle: HTMLParagraphElement =
+      modal.querySelector('.modal-card-title');
+    const modalContent: HTMLParagraphElement =
+      modal.querySelector('#modalMensagem');
+
+    modal.classList.add('is-active');
+    modalTitle.innerText = titulo;
+    modalContent.innerText = mensagem;
+
+    navigator.vibrate(300);
+  }
   onClick(novoCEP: ICEP) {
     this.mostraCEPSelecionado(novoCEP);
     this.listarAnteriores(novoCEP);

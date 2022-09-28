@@ -12,7 +12,7 @@ export default class ControlesBusca {
   private deletaTodos: HTMLButtonElement;
   private listaBuscados: NodeListOf<HTMLAnchorElement>;
   private limpaTela: HTMLButtonElement;
-  
+
   constructor() {
     this.opcoesBusca = ['json', 'jsonp', 'xml'];
     this.preencheSelectOpcoes();
@@ -52,7 +52,7 @@ export default class ControlesBusca {
       if (cep && cep.replace(/([^0-9])/gi, '').length == 8) {
         consultaAPI(cep.replace(/([^0-9])/gi, ''), opcao);
       } else {
-        this.mensagemErro('Insira um CEP válido');
+        tela.mensagemErro('Insira um CEP válido', 'CEP incorreto!');
       }
     });
   }
@@ -68,11 +68,6 @@ export default class ControlesBusca {
     });
   }
 
-  private mensagemErro(mensagem: string) {
-    window.alert(mensagem);
-    navigator.vibrate(300);
-  }
-
   private deletaAnteriores() {
     this.deletaTodos = document.querySelector('#deletaTodos');
     this.deletaTodos.addEventListener('click', () => {
@@ -80,8 +75,11 @@ export default class ControlesBusca {
       this.listaBuscados = document.querySelectorAll('a.panel-block');
       this.listaBuscados.forEach((item) => {
         item.remove();
+        tela.mensagemErro(
+          'Todos os dados foram apagados',
+          'Histórico removido com Sucesso',
+        );
       });
-      this.mensagemErro('Todos os CEPs buscados foram deletados');
     });
   }
 }
