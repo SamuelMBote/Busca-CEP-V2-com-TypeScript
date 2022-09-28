@@ -15,6 +15,7 @@ export default class ExibeTela {
 
   constructor() {
     this.adicionaCampos();
+    this.exibeClimaTempo();
   }
 
   private adicionaCampos(): void {
@@ -62,8 +63,21 @@ export default class ExibeTela {
     const panelBlock = document.createElement('a');
     panelBlock.classList.add('panel-block');
     panelBlock.innerText = cep.cep;
+    panelBlock.addEventListener('dblclick', (Event) => {
+      const item = Event;
+      console.log(item);
+    });
     this.listaBuscados.appendChild(panelBlock);
     return;
+  }
+
+  private exibeClimaTempo() {
+    function teste() {
+      console.log('teste');
+    }
+    const verificacao = setInterval(() => {
+      teste();
+    }, 1000);
   }
 
   onClick(novoCEP: ICEP) {
@@ -76,12 +90,8 @@ export default class ExibeTela {
     );
     listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
     if (listaCEPSBuscados && listaCEPSBuscados.length >= 1) {
-      listaCEPSBuscados.reverse().forEach((cep): HTMLAnchorElement => {
-        const panelBlock = document.createElement('a');
-        panelBlock.classList.add('panel-block');
-        panelBlock.innerText = cep.cep;
-        this.listaBuscados.appendChild(panelBlock);
-        return panelBlock;
+      listaCEPSBuscados.reverse().forEach((cep) => {
+        return this.listarAnteriores(cep);
       });
       const ultimoItemBuscado = listaCEPSBuscados.length - 1;
       this.mostraCEPSelecionado(listaCEPSBuscados[ultimoItemBuscado]);

@@ -6,23 +6,24 @@ const tela = new ExibeTela();
 
 export default class ControlesBusca {
   public opcoesBusca: string[];
-  private botaoCEP: HTMLButtonElement = document.querySelector('#buscar');
-  private cepInput: HTMLInputElement = document.querySelector('#cep');
-  private selectOpcao: HTMLSelectElement =
-    document.querySelector('#opcoesBusca');
-  private cepBuscado: ICEP[];
-  private deletaTodos: HTMLButtonElement =
-    document.querySelector('#deletaTodos');
+  private botaoCEP: HTMLButtonElement;
+  private cepInput: HTMLInputElement;
+  private selectOpcao: HTMLSelectElement;
+  private deletaTodos: HTMLButtonElement;
   private listaBuscados: NodeListOf<HTMLAnchorElement>;
+  private limpaTela: HTMLButtonElement;
+  
   constructor() {
     this.opcoesBusca = ['json', 'jsonp', 'xml'];
     this.preencheSelectOpcoes();
     this.eventoBotaoBuscarCEP();
     this.eventoInputCEP();
     this.deletaAnteriores();
+    this.eventoLimparTela();
   }
 
   private preencheSelectOpcoes() {
+    this.selectOpcao = document.querySelector('#opcoesBusca');
     this.opcoesBusca.forEach((opcao) => {
       let option: HTMLOptGroupElement = document.createElement('option');
       option.setAttribute('value', opcao.toString().toLowerCase());
@@ -33,6 +34,7 @@ export default class ControlesBusca {
   }
 
   private eventoInputCEP(): void {
+    this.cepInput = document.querySelector('#cep');
     this.cepInput.addEventListener('keyup', () => {
       this.cepInput.value = this.cepInput.value.replace(/([^0-9])/gi, '');
       const arrayCEP = Array.from(this.cepInput.value);
@@ -42,6 +44,7 @@ export default class ControlesBusca {
   }
 
   private eventoBotaoBuscarCEP(): void {
+    this.botaoCEP = document.querySelector('#buscar');
     this.botaoCEP.addEventListener('click', () => {
       const cep = this.cepInput.value;
       const opcao = this.selectOpcao.value;
@@ -54,12 +57,24 @@ export default class ControlesBusca {
     });
   }
 
+  private eventoLimparTela() {
+    this.limpaTela = document.querySelector('#limpaTela');
+    this.limpaTela.addEventListener('click', () => {
+      const camposInformacao: NodeListOf<HTMLInputElement> =
+        document.querySelectorAll('input');
+      camposInformacao.forEach((item) => {
+        item.value = '';
+      });
+    });
+  }
+
   private mensagemErro(mensagem: string) {
     window.alert(mensagem);
     navigator.vibrate(300);
   }
 
   private deletaAnteriores() {
+    this.deletaTodos = document.querySelector('#deletaTodos');
     this.deletaTodos.addEventListener('click', () => {
       localStorage.clear();
       this.listaBuscados = document.querySelectorAll('a.panel-block');
