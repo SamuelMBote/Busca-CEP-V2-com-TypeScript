@@ -1,9 +1,12 @@
 import CEP from '../classes/CEP';
 import ExibeTela from '../classes/ExibeTela';
 import ICEP from '../interfaces/ICEP';
-const tela = new ExibeTela();
 
-export default function consultaAPI(cep: string, opcao: string) {
+export default function consultaAPI(
+  cep: string,
+  opcao: string,
+  Tela: ExibeTela,
+) {
   fetch(`https://viacep.com.br/ws/${cep}/${opcao}/`)
     .then((resultado) => {
       let retornoBusca: Promise<any>;
@@ -48,7 +51,7 @@ export default function consultaAPI(cep: string, opcao: string) {
       );
       listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
       const novoCEP = new CEP(CEPRetornado);
-      tela.onClick(novoCEP);
+      Tela.onClick(novoCEP);
 
       listaCEPSBuscados.push(novoCEP);
 

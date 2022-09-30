@@ -1,6 +1,7 @@
 import dataHora from '../functions/dataHora';
 import ICEP from '../interfaces/ICEP';
 import modalInit from '../functions/modalInit';
+import IMensagem from '../interfaces/IMensagem';
 
 export default class ExibeTela {
   private exibeCEP: HTMLParagraphElement;
@@ -14,12 +15,17 @@ export default class ExibeTela {
   private exibeDDD: HTMLInputElement;
   private exibeSIAFI: HTMLInputElement;
   private listaBuscados: HTMLElement;
-  private exibeDataHora: HTMLAnchorElement;
+  private exibeDataHora: HTMLSpanElement;
+  private exibeClimaTempo: HTMLSpanElement;
+  private geolocalizacao: WindowLocalStorage;
+  private consultaClima: WindowLocalStorage;
 
   constructor() {
-    this.adicionaCampos();
     this.dataHora();
+    this.adicionaCampos();
     modalInit();
+
+    this.exibeClima.bind(this);
   }
 
   private adicionaCampos(): void {
@@ -34,7 +40,8 @@ export default class ExibeTela {
     this.exibeDDD = document.querySelector('#ddd');
     this.exibeSIAFI = document.querySelector('#siafi');
     this.listaBuscados = document.querySelector('#listaBuscados');
-
+    this.exibeDataHora = document.querySelector('#dataHora');
+    this.exibeClimaTempo = document.querySelector('#climaTempo');
     return;
   }
   private mostraCEPSelecionado(cep: ICEP) {
@@ -50,20 +57,8 @@ export default class ExibeTela {
     this.exibeSIAFI.value = cep.siafi.toString();
     return cep;
   }
-  public limparCEPSelecionado() {
-    this.exibeCEP.innerText = '';
-    this.exibeLogradouro.value = '';
-    this.exibeComplemento.value = '';
-    this.exibeBairro.value = '';
-    this.exibeLocalidade.value = '';
-    this.exibeUF.value = '';
-    this.exibeIBGE.value = '';
-    this.exibeGIA.value = '';
-    this.exibeDDD.value = '';
-    this.exibeSIAFI.value = '';
-    return;
-  }
-  private listarAnteriores(cep: ICEP) {
+
+  private listarAnteriores(cep: ICEP): HTMLElement {
     const panelBlock = document.createElement('a');
     panelBlock.classList.add('panel-block');
     panelBlock.innerText = cep.cep;
@@ -71,36 +66,66 @@ export default class ExibeTela {
       const item = Event;
       console.log(item);
     });
-    this.listaBuscados.appendChild(panelBlock);
-    return;
+    return this.listaBuscados.appendChild(panelBlock);
   }
 
   private dataHora() {
-    this.exibeDataHora = document.querySelector('#dataHora');
     const verificacao = setInterval(
       () => (this.exibeDataHora.innerText = dataHora()),
       1000,
     );
   }
 
-  mensagemErro(mensagem: string, titulo: string, tipoAviso: string = 'aviso') {
+  exibeClima() {
+    const Clima = JSON.parse(localStorage.getItem('clima'));
+    this.exibeClimaTempo.innerText = `${Clima.temperatura}ºC`;
+  }
+
+  public mensagem(Mensagem: IMensagem) {
+    const tipo: string = Mensagem.tipo;
+    let classe: string;
     const modal: HTMLDivElement = document.querySelector('#modalAviso');
     const modalTitle: HTMLParagraphElement =
-      modal.querySelector('.modal-card-title');
+      modal.querySelector('#tituloMensagem');
     const modalContent: HTMLParagraphElement =
       modal.querySelector('#modalMensagem');
+    const modalMessage = modal.querySelector('.message');
 
+    switch (tipo) {
+      case 'erro':
+        classe = 'is-danger';
+
+        break;
+      case 'aviso':
+        classe = 'is-warning';
+        break;
+      case 'sucesso':
+        classe = 'is-success';
+        break;
+      case 'info':
+        classe = 'is-info';
+        break;
+    }
     modal.classList.add('is-active');
-    modalTitle.innerText = titulo;
-    modalContent.innerText = mensagem;
+
+    while (modalMessage.classList.length > 0) {
+      modalMessage.classList.remove(modalMessage.classList.item(0));
+    }
+    modalMessage.classList.add('message', classe);
+
+    modalTitle.innerText = Mensagem.titulo;
+    modalContent.innerText = Mensagem.conteudo;
 
     navigator.vibrate(300);
   }
-  onClick(novoCEP: ICEP) {
+
+  public onClick(novoCEP: ICEP) {
     this.mostraCEPSelecionado(novoCEP);
     this.listarAnteriores(novoCEP);
   }
-  onInit() {
+
+  public onInit() {
+    this.adicionaCampos();
     let listaCEPSBuscados: ICEP[] = JSON.parse(
       localStorage.getItem('cepsBuscadosAnterior'),
     );

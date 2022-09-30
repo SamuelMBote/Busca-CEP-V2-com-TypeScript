@@ -25,10 +25,31 @@
                 </a>
             </div>
             <div class="navbar-end">
-                <div class="navbar-item">
-                    <a href="#" id="dataHora">
-
-                    </a>
+                <div class="dropdown" id="painelClimaHora">
+                    <div class="navbar-item dropdown-trigger" id="triggerClimaHora">
+                        <a class="" aria-haspopup="true" aria-controls="dropdown-menu2">
+                            <span id="climaTempo"></span>
+                            <span id="dataHora"></span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                        <div class="dropdown-content">
+                            <div class="dropdown-item">
+                                <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <div class="dropdown-item">
+                                <p>You simply need to use a <code>&lt;div&gt;</code> instead.</p>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                This is a link
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="navbar-item">
                     <div class="buttons">
@@ -164,20 +185,20 @@
         </div>
     </footer>
 </body>
+
 <div class="modal" id="modalAviso">
     <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Histórico removido com sucesso!</p>
-            <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-            <p id="modalMensagem">Todos os CEP buscados anteriormente foram deletados</p>
-        </section>
-        <footer class="modal-card-foot">
-
-        </footer>
+    <div class="modal-content">
+        <article class="message">
+            <div class="message-header">
+                <p id="tituloMensagem">Hello World</p>
+            </div>
+            <div class="message-body">
+                <p id="modalMensagem">Todos os CEP buscados anteriormente foram deletados</p>
+            </div>
+        </article>
     </div>
+</div>
 </div>
 
 </html>
