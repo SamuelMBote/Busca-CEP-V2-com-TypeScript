@@ -1,5 +1,6 @@
 import ExibeTela from './ExibeTela';
 import consultaAPI from '../functions/consultaViaCEP';
+import ICEP from '../interfaces/ICEP';
 export default class ControlesBusca {
   public opcoesBusca: string[];
   private botaoCEP: HTMLButtonElement;
@@ -52,6 +53,8 @@ export default class ControlesBusca {
       const opcao = this.selectOpcao.value;
       if (cep && cep.replace(/([^0-9])/gi, '').length == 8) {
         consultaAPI(cep.replace(/([^0-9])/gi, ''), opcao, this.tela);
+        this.cepInput.value = '';
+        this.cepInput.focus();
       } else {
         this.tela.mensagem({
           conteudo: 'Insira um CEP válido',
@@ -65,11 +68,19 @@ export default class ControlesBusca {
   private eventoLimparTela() {
     this.limpaTela = document.querySelector('#limpaTela');
     this.limpaTela.addEventListener('click', () => {
-      const camposInformacao: NodeListOf<HTMLInputElement> =
-        document.querySelectorAll('input');
-      camposInformacao.forEach((item) => {
-        item.value = '';
-      });
+      const limpeza: ICEP = {
+        cep: null,
+        logradouro: null,
+        complemento: null,
+        bairro: null,
+        localidade: null,
+        uf: null,
+        ibge: null,
+        gia: null,
+        ddd: null,
+        siafi: null,
+      };
+      this.tela.mostraCEPSelecionado(limpeza);
     });
   }
 

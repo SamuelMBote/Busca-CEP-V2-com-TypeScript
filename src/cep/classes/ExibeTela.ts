@@ -1,7 +1,9 @@
-import dataHora from '../functions/dataHora';
+import {dataHora, periodoDia} from '../functions/dataHora';
 import ICEP from '../interfaces/ICEP';
 import modalInit from '../functions/modalInit';
 import IMensagem from '../interfaces/IMensagem';
+import ClimaTempo from './ClimaTempo';
+import IClimaTempo from '../interfaces/IClimaTempo';
 
 export default class ExibeTela {
   private exibeCEP: HTMLParagraphElement;
@@ -18,14 +20,20 @@ export default class ExibeTela {
   private exibeDataHora: HTMLSpanElement;
   private exibeClimaTempo: HTMLSpanElement;
   private geolocalizacao: WindowLocalStorage;
-  private consultaClima: WindowLocalStorage;
+  private consultaClima: IClimaTempo;
+  private clima: ClimaTempo;
+  private periodo: HTMLElement;
 
   constructor() {
     this.dataHora();
     this.adicionaCampos();
     modalInit();
-
+    this.clima = new ClimaTempo();
+    this.geolocalizacao = JSON.parse(localStorage.getItem('localizacao'));
+    if (!this.geolocalizacao) this.clima.buscaIP();
+    this.consultaClima = JSON.parse(localStorage.getItem('clima'));
     this.exibeClima.bind(this);
+    this.exibeClima(this.consultaClima);
   }
 
   private adicionaCampos(): void {
@@ -42,19 +50,20 @@ export default class ExibeTela {
     this.listaBuscados = document.querySelector('#listaBuscados');
     this.exibeDataHora = document.querySelector('#dataHora');
     this.exibeClimaTempo = document.querySelector('#climaTempo');
+    this.periodo = document.querySelector('html');
     return;
   }
-  private mostraCEPSelecionado(cep: ICEP) {
+  public mostraCEPSelecionado(cep: ICEP) {
     this.exibeCEP.innerText = cep.cep;
     this.exibeLogradouro.value = cep.logradouro;
     this.exibeComplemento.value = cep.complemento;
     this.exibeBairro.value = cep.bairro;
     this.exibeLocalidade.value = cep.localidade;
     this.exibeUF.value = cep.uf;
-    this.exibeIBGE.value = cep.ibge.toString();
-    this.exibeGIA.value = cep.gia.toString();
-    this.exibeDDD.value = cep.ddd.toString();
-    this.exibeSIAFI.value = cep.siafi.toString();
+    this.exibeIBGE.value = cep.ibge;
+    this.exibeGIA.value = cep.gia;
+    this.exibeDDD.value = cep.ddd;
+    this.exibeSIAFI.value = cep.siafi;
     return cep;
   }
 
@@ -70,15 +79,15 @@ export default class ExibeTela {
   }
 
   private dataHora() {
-    const verificacao = setInterval(
-      () => (this.exibeDataHora.innerText = dataHora()),
-      1000,
-    );
+    const verifica = setInterval(() => {
+      this.exibeDataHora.innerText = dataHora();
+      this.periodo.dataset.theme = periodoDia();
+    }, 1000);
   }
 
-  exibeClima() {
-    const Clima = JSON.parse(localStorage.getItem('clima'));
-    this.exibeClimaTempo.innerText = `${Clima.temperatura}ºC`;
+  private exibeClima(climaTempo: IClimaTempo) {
+    console.log(climaTempo);
+    this.exibeClimaTempo.innerText = `${climaTempo.temperatura}ºC`;
   }
 
   public mensagem(Mensagem: IMensagem) {
@@ -126,6 +135,8 @@ export default class ExibeTela {
 
   public onInit() {
     this.adicionaCampos();
+    this.exibeDataHora.innerText = dataHora();
+    this.periodo.dataset.theme = periodoDia();
     let listaCEPSBuscados: ICEP[] = JSON.parse(
       localStorage.getItem('cepsBuscadosAnterior'),
     );

@@ -1,4 +1,54 @@
-.panel-block.is-active {
-  background-color: hsl(229, 53%, 53%);
-  color: white;
+[data-theme='night'] {
+  --dark-primary-color: #303f9f;
+  --light-primary-color: #c5cae9;
+  --primary-color: #3f51b5;
+  --text-icons: #ffffff;
+  --accent-color: #9e9e9e;
+  --primary-text: #757575;
+  --secondary-text: #212121;
+  --divider-color: #bdbdbd;
+}
+[data-theme='day'] {
+  --dark-primary-color: #0288d1;
+  --light-primary-color: #b3e5fc;
+  --primary-color: #03a9f4;
+  --text-icons: #ffffff;
+  --accent-color: #ffc107;
+  --primary-text: #212121;
+  --secondary-text: #757575;
+  --divider-color: #bdbdbd;
+}
+.mesage-header {
+  .is-danger {
+    background-color: #d32f2f !important;
+    color: #212121 !important;
+  }
+}
+
+p {
+  color: var(--primary-text);
+}
+a {
+  color: var(--text-icons);
+}
+.navbar-item p {
+  cursor: pointer;
+}
+.bg-dark-primary {
+  background-color: var(--dark-primary-color);
+}
+.bg-light-primary-color {
+  background-color: var(--light-primary-color);
+}
+.bg-primary-color {
+  background-color: var(--primary-color);
+}
+
+.secondary-text {
+  color: var(--secondary-text);
+}
+
+.button {
+  background-color: var(--accent-color);
+  color: var(--dark-primary-color);
 }

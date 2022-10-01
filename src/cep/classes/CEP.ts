@@ -8,12 +8,12 @@ export default class CEP implements ICEP {
   bairro: string;
   localidade: string;
   uf: string;
-  ibge: number;
-  gia: number;
-  ddd: number;
-  siafi: number;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
   erro?: boolean;
-  
+
   constructor(informacoes: ICEP) {
     this.cep = informacoes.erro ? 'NÃO EXISTE' : informacoes.cep;
     this.logradouro = informacoes.erro ? 'NÃO EXISTE' : informacoes.logradouro;
@@ -23,9 +23,9 @@ export default class CEP implements ICEP {
     this.bairro = informacoes.erro ? 'NÃO EXISTE' : informacoes.bairro;
     this.localidade = informacoes.erro ? 'NÃO EXISTE' : informacoes.localidade;
     this.uf = informacoes.erro ? 'NÃO EXISTE' : informacoes.uf;
-    this.ibge = informacoes.erro ? 0 : informacoes.ibge;
-    this.gia = informacoes.erro ? 0 : informacoes.gia;
-    this.ddd = informacoes.erro ? 0 : informacoes.ddd;
-    this.siafi = informacoes.erro ? 0 : informacoes.siafi;
+    this.ibge = informacoes.erro ? 'NÃO EXISTE' : informacoes.ibge;
+    this.gia = informacoes.erro ? 'NÃO EXISTE' : informacoes.gia;
+    this.ddd = informacoes.erro ? 'NÃO EXISTE' : informacoes.ddd;
+    this.siafi = informacoes.erro ? 'NÃO EXISTE' : informacoes.siafi;
   }
 }

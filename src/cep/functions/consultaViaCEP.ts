@@ -36,10 +36,10 @@ export default function consultaAPI(
           bairro: xml.documentElement.querySelector('bairro').innerHTML,
           localidade: xml.documentElement.querySelector('localidade').innerHTML,
           uf: xml.documentElement.querySelector('uf').innerHTML,
-          ibge: Number(xml.documentElement.querySelector('ibge').innerHTML),
-          gia: Number(xml.documentElement.querySelector('gia').innerHTML),
-          ddd: Number(xml.documentElement.querySelector('ddd').innerHTML),
-          siafi: Number(xml.documentElement.querySelector('siafi').innerHTML),
+          ibge: xml.documentElement.querySelector('ibge').innerHTML,
+          gia: xml.documentElement.querySelector('gia').innerHTML,
+          ddd: xml.documentElement.querySelector('ddd').innerHTML,
+          siafi: xml.documentElement.querySelector('siafi').innerHTML,
           erro: xml.documentElement.querySelector('erro') ? true : false,
         };
       }

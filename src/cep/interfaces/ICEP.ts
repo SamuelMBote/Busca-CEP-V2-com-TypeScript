@@ -5,9 +5,9 @@ export default interface ICEP {
   bairro: string;
   localidade: string;
   uf: string;
-  ibge: number;
-  gia: number;
-  ddd: number;
-  siafi: number;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
   erro?: boolean;
 }

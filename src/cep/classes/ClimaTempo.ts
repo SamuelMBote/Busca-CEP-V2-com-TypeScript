@@ -3,11 +3,9 @@ import ILocal from '../interfaces/ILocal';
 import IPrevisao from '../interfaces/IPrevisao';
 
 export default class ClimaTempo {
-  constructor() {
-    this.buscaIP();
-  }
+  constructor() {}
 
-  private buscaIP() {
+  public buscaIP() {
     fetch(
       'https://api.hgbrasil.com/geoip?format=json-cors&key=5dc085d0&address=remote&precision=false',
     )
@@ -33,7 +31,7 @@ export default class ClimaTempo {
       });
   }
 
-  private buscaClicaTempo(local: ILocal) {
+  public buscaClicaTempo(local: ILocal) {
     fetch(
       `https://api.hgbrasil.com/weather?format=json-cors&key=5dc085d0&woeid=${local.woeid}`,
     )
