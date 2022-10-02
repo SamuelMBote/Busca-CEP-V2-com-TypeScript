@@ -34,6 +34,7 @@ export default class ExibeTela {
     this.consultaClima = JSON.parse(localStorage.getItem('clima'));
     this.exibeClima.bind(this);
     this.exibeClima(this.consultaClima);
+    this.exibeItemHistorico.bind(this);
   }
 
   private adicionaCampos(): void {
@@ -66,14 +67,23 @@ export default class ExibeTela {
     this.exibeSIAFI.value = cep.siafi;
     return cep;
   }
-
-  private listarAnteriores(cep: ICEP): HTMLElement {
-    const panelBlock = document.createElement('a');
+  private excluiItemHistorico() {}
+  private exibeItemHistorico(Event, elemento: HTMLAnchorElement): ICEP {
+    Event.preventDefault();
+    const idx = elemento.getAttribute('Index');
+    const listaCEPs: ICEP[] = JSON.parse(
+      localStorage.getItem('cepsBuscadosAnterior'),
+    );
+    return this.mostraCEPSelecionado(listaCEPs[idx]);
+  }
+  private listarAnteriores(cep: ICEP, index: number): HTMLElement {
+    const panelBlock: HTMLAnchorElement = document.createElement('a');
+    panelBlock.setAttribute('Index', index.toString());
     panelBlock.classList.add('panel-block');
-    panelBlock.innerText = cep.cep;
-    panelBlock.addEventListener('dblclick', (Event) => {
-      const item = Event;
-      console.log(item);
+    panelBlock.innerText = `${cep.cep}: ${cep.logradouro}, ${cep.bairro} - ${cep.localidade}, ${cep.uf}`;
+
+    panelBlock.addEventListener('dblclick', () => {
+      this.exibeItemHistorico(Event, panelBlock);
     });
     return this.listaBuscados.appendChild(panelBlock);
   }
@@ -86,7 +96,6 @@ export default class ExibeTela {
   }
 
   private exibeClima(climaTempo: IClimaTempo) {
-    console.log(climaTempo);
     this.exibeClimaTempo.innerText = `${climaTempo.temperatura}ºC`;
   }
 
@@ -128,9 +137,9 @@ export default class ExibeTela {
     navigator.vibrate(300);
   }
 
-  public onClick(novoCEP: ICEP) {
+  public onClick(novoCEP: ICEP, index: number) {
     this.mostraCEPSelecionado(novoCEP);
-    this.listarAnteriores(novoCEP);
+    this.listarAnteriores(novoCEP, index);
   }
 
   public onInit() {
@@ -142,8 +151,8 @@ export default class ExibeTela {
     );
     listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
     if (listaCEPSBuscados && listaCEPSBuscados.length >= 1) {
-      listaCEPSBuscados.reverse().forEach((cep) => {
-        return this.listarAnteriores(cep);
+      listaCEPSBuscados.forEach((cep, index) => {
+        return this.listarAnteriores(cep, index);
       });
       const ultimoItemBuscado = listaCEPSBuscados.length - 1;
       this.mostraCEPSelecionado(listaCEPSBuscados[ultimoItemBuscado]);

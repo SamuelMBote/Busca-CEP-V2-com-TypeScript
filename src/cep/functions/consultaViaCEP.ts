@@ -51,15 +51,17 @@ export default function consultaAPI(
       );
       listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
       const novoCEP = new CEP(CEPRetornado);
-      Tela.onClick(novoCEP);
-
       listaCEPSBuscados.push(novoCEP);
 
       localStorage.setItem(
         'cepsBuscadosAnterior',
         JSON.stringify(listaCEPSBuscados),
       );
-      return;
+      return listaCEPSBuscados;
+    })
+    .then((listaCEPBusados) => {
+      const ultimoItem: number = listaCEPBusados.length - 1;
+      Tela.onClick(listaCEPBusados[ultimoItem], ultimoItem);
     })
     .catch((e) => {
       throw new Error('Erro na Busca');

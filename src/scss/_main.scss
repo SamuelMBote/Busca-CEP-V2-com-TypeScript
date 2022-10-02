@@ -52,3 +52,7 @@ a {
   background-color: var(--accent-color);
   color: var(--dark-primary-color);
 }
+#listaBuscados a:last-child {
+  background-color: var(--primary-color);
+  color: var(--text-icons);
+}
