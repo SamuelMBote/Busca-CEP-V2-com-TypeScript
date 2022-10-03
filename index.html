@@ -27,7 +27,7 @@
             <div class="navbar-end">
                 <div class="dropdown" id="painelClimaHora">
                     <div class="navbar-item dropdown-trigger" id="triggerClimaHora">
-                        <p class="" aria-haspopup="true" aria-controls="dropdown-menu2">
+                        <p class="" aria-haspopup="true" aria-controls="dropdown-menu">
                             <span id="climaTempo"></span>
                             <span id="dataHora"></span>
                             <span class="icon is-small">
@@ -35,19 +35,21 @@
                             </span>
                         </p>
                     </div>
-                    <div class="dropdown-menu" id="dropdown-menu2" role="menu">
-                        <div class="dropdown-content">
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content" id="painelClima">
                             <div class="dropdown-item">
-                                <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
+                                <p id="cidade_uf"></p>
+                                <p id="temperatura">
+                                <p>
+                                <p id="descricao"></p>
+
                             </div>
                             <hr class="dropdown-divider">
                             <div class="dropdown-item">
-                                <p>You simply need to use a <code>&lt;div&gt;</code> instead.</p>
+                                <div class="columns" id="previsao">
+
+                                </div>
                             </div>
-                            <hr class="dropdown-divider">
-                            <a href="#" class="dropdown-item">
-                                This is a link
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -170,6 +172,9 @@
             <article class="panel " id="listaBuscados">
                 <p class="panel-heading bg-primary-color secondary-text message-header">
                     Buscados anteriormente
+                    <span class="tag">
+                        click 1x (ver) 2x (remover)
+                    </span>
                     <button class="delete is-large" id="deletaTodos"></button>
 
                 </p>

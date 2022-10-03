@@ -4,6 +4,8 @@ import modalInit from '../functions/modalInit';
 import IMensagem from '../interfaces/IMensagem';
 import ClimaTempo from './ClimaTempo';
 import IClimaTempo from '../interfaces/IClimaTempo';
+import IPrevisao from '../interfaces/IPrevisao';
+import {node} from 'webpack';
 
 export default class ExibeTela {
   private exibeCEP: HTMLParagraphElement;
@@ -19,19 +21,19 @@ export default class ExibeTela {
   private listaBuscados: HTMLElement;
   private exibeDataHora: HTMLSpanElement;
   private exibeClimaTempo: HTMLSpanElement;
-  private geolocalizacao: WindowLocalStorage;
+  private geolocalizacao: WindowSessionStorage;
   private consultaClima: IClimaTempo;
   private clima: ClimaTempo;
   private periodo: HTMLElement;
-
+  private painelClimaTempo: HTMLDivElement;
   constructor() {
     this.dataHora();
     this.adicionaCampos();
     modalInit();
     this.clima = new ClimaTempo();
-    this.geolocalizacao = JSON.parse(localStorage.getItem('localizacao'));
+    this.geolocalizacao = JSON.parse(sessionStorage.getItem('localizacao'));
     if (!this.geolocalizacao) this.clima.buscaIP();
-    this.consultaClima = JSON.parse(localStorage.getItem('clima'));
+    this.consultaClima = JSON.parse(sessionStorage.getItem('clima'));
     this.exibeClima.bind(this);
     this.exibeClima(this.consultaClima);
     this.exibeItemHistorico.bind(this);
@@ -52,6 +54,7 @@ export default class ExibeTela {
     this.exibeDataHora = document.querySelector('#dataHora');
     this.exibeClimaTempo = document.querySelector('#climaTempo');
     this.periodo = document.querySelector('html');
+    this.painelClimaTempo = document.querySelector('#painelClima');
     return;
   }
   public mostraCEPSelecionado(cep: ICEP) {
@@ -67,9 +70,19 @@ export default class ExibeTela {
     this.exibeSIAFI.value = cep.siafi;
     return cep;
   }
-  private excluiItemHistorico() {}
-  private exibeItemHistorico(Event, elemento: HTMLAnchorElement): ICEP {
-    Event.preventDefault();
+  private excluiItemHistorico(Event: MouseEvent, elemento: HTMLAnchorElement) {
+    const elementoLista = JSON.parse(
+      localStorage.getItem('cepsBuscadosAnterior'),
+    );
+    const itemSelecionado = elemento.getAttribute('index');
+    elementoLista[itemSelecionado] = null;
+    elemento.remove();
+    localStorage.setItem('cepsBuscadosAnterior', JSON.stringify(elementoLista));
+  }
+  private exibeItemHistorico(
+    Event: MouseEvent,
+    elemento: HTMLAnchorElement,
+  ): ICEP {
     const idx = elemento.getAttribute('Index');
     const listaCEPs: ICEP[] = JSON.parse(
       localStorage.getItem('cepsBuscadosAnterior'),
@@ -80,10 +93,12 @@ export default class ExibeTela {
     const panelBlock: HTMLAnchorElement = document.createElement('a');
     panelBlock.setAttribute('Index', index.toString());
     panelBlock.classList.add('panel-block');
-    panelBlock.innerText = `${cep.cep}: ${cep.logradouro}, ${cep.bairro} - ${cep.localidade}, ${cep.uf}`;
-
-    panelBlock.addEventListener('dblclick', () => {
+    panelBlock.innerHTML = `${cep.cep}: ${cep.logradouro}, ${cep.bairro} - ${cep.localidade}, ${cep.uf}`;
+    panelBlock.addEventListener('click', (Event: MouseEvent) => {
       this.exibeItemHistorico(Event, panelBlock);
+    });
+    panelBlock.addEventListener('dblclick', (Event: MouseEvent) => {
+      this.excluiItemHistorico(Event, panelBlock);
     });
     return this.listaBuscados.appendChild(panelBlock);
   }
@@ -97,6 +112,31 @@ export default class ExibeTela {
 
   private exibeClima(climaTempo: IClimaTempo) {
     this.exibeClimaTempo.innerText = `${climaTempo.temperatura}ºC`;
+    const painel = this.painelClimaTempo;
+    console.log(climaTempo.previsao);
+    painel.querySelector(
+      '#temperatura',
+    ).innerHTML = `${climaTempo.temperatura}ºC`;
+    painel.querySelector('#cidade_uf').innerHTML = `${climaTempo.cidade_uf}`;
+    painel.querySelector('#descricao').innerHTML = `${climaTempo.descricao}`;
+
+    climaTempo.previsao.forEach((dia) => {
+      const div = document.createElement('div');
+      div.classList.add('column');
+
+      div.innerHTML = `<p class="bd-notification is-info">${dia.weekday} ${dia.date}</p>
+        <div class="columns is-mobile">
+          <div class="column">
+          <p class="bd-notification is-info">${dia.description}</p>
+          <p class="bd-notification is-info">${dia.condition}</p>
+          </div>
+          <div class="column">
+            <p class="bd-notification is-info">Máx: ${dia.max}ºC</p>
+            <p class="bd-notification is-info">Mín: ${dia.min}ºC</p>
+          </div>
+        </div>`;
+      painel.querySelector('#previsao').innerHTML += div.outerHTML;
+    });
   }
 
   public mensagem(Mensagem: IMensagem) {
@@ -152,7 +192,7 @@ export default class ExibeTela {
     listaCEPSBuscados ? listaCEPSBuscados : (listaCEPSBuscados = []);
     if (listaCEPSBuscados && listaCEPSBuscados.length >= 1) {
       listaCEPSBuscados.forEach((cep, index) => {
-        return this.listarAnteriores(cep, index);
+        if (cep) return this.listarAnteriores(cep, index);
       });
       const ultimoItemBuscado = listaCEPSBuscados.length - 1;
       this.mostraCEPSelecionado(listaCEPSBuscados[ultimoItemBuscado]);

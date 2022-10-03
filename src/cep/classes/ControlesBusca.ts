@@ -9,13 +9,13 @@ export default class ControlesBusca {
   private deletaTodos: HTMLButtonElement;
   private listaBuscados: NodeListOf<HTMLAnchorElement>;
   private limpaTela: HTMLButtonElement;
-  private tela: ExibeTela;
+  private Tela: ExibeTela;
   private triggerClimaHora: HTMLDivElement;
   private painelClimaHora: HTMLDivElement;
 
   constructor(Tela: ExibeTela) {
-    this.tela = Tela;
-    this.tela.onInit();
+    this.Tela = Tela;
+    this.Tela.onInit();
     this.opcoesBusca = ['json', 'jsonp', 'xml'];
     this.preencheSelectOpcoes();
     this.eventoInputCEP();
@@ -52,11 +52,11 @@ export default class ControlesBusca {
       const cep = this.cepInput.value;
       const opcao = this.selectOpcao.value;
       if (cep && cep.replace(/([^0-9])/gi, '').length == 8) {
-        consultaAPI(cep.replace(/([^0-9])/gi, ''), opcao, this.tela);
+        consultaAPI(cep.replace(/([^0-9])/gi, ''), opcao, this.Tela);
         this.cepInput.value = '';
         this.cepInput.focus();
       } else {
-        this.tela.mensagem({
+        this.Tela.mensagem({
           conteudo: 'Insira um CEP válido',
           titulo: 'CEP incorreto!',
           tipo: 'erro',
@@ -80,7 +80,7 @@ export default class ControlesBusca {
         ddd: null,
         siafi: null,
       };
-      this.tela.mostraCEPSelecionado(limpeza);
+      this.Tela.mostraCEPSelecionado(limpeza);
     });
   }
 
@@ -91,7 +91,7 @@ export default class ControlesBusca {
       this.listaBuscados = document.querySelectorAll('a.panel-block');
       this.listaBuscados.forEach((item) => {
         item.remove();
-        this.tela.mensagem({
+        this.Tela.mensagem({
           conteudo: 'Todos os dados foram apagados',
           titulo: 'Histórico removido com Sucesso',
           tipo: 'sucesso',

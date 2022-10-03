@@ -11,13 +11,13 @@ export default class ClimaTempo {
     )
       .then((resposta) => resposta.json())
       .then((localizacao) => {
-        localStorage.setItem('localizacao', JSON.stringify(localizacao));
+        sessionStorage.setItem('localizacao', JSON.stringify(localizacao));
       })
       .catch((e) => {
         throw new Error('Localizaçao não Encontrada');
       })
       .finally(() => {
-        const dadosLocal = JSON.parse(localStorage.getItem('localizacao'));
+        const dadosLocal = JSON.parse(sessionStorage.getItem('localizacao'));
 
         const meuLocal: ILocal = {
           cidade: dadosLocal.results.city,
@@ -68,13 +68,13 @@ export default class ClimaTempo {
         return ClimaTempo;
       })
       .then((ClimaTempo) => {
-        localStorage.setItem('clima', JSON.stringify(ClimaTempo));
+        sessionStorage.setItem('clima', JSON.stringify(ClimaTempo));
       })
       .catch((Error) => {
         throw new Error('Não foi possivel buscar o clima');
       })
       .finally(() => {
-        const Clima = JSON.parse(localStorage.getItem('clima'));
+        const Clima = JSON.parse(sessionStorage.getItem('clima'));
       });
   }
 }
