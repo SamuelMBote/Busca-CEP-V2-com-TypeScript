@@ -67,13 +67,29 @@ interface ResponseAPIIP {
   type: string
   woeid: number
 }
-export default class ClimaTempo {
+export default class ClimaTempo implements IClimaTempo {
   private static dados: ResponseAPIClima | null;
   private static ip: ResponseAPIIP | null;
-  public static clima: IClimaTempo
+  private static clima: IClimaTempo
+  cidade: string;
+  condicao_codigo: string;
+  condicao_slug: string;
+  data: string;
+  descricao: string;
+  hora: string;
+  nascerSol: string;
+  previsao: IPrevisao[];
+  porSol: string;
+  temperatura: number;
+  umidade: number;
+  velocidadeVento: string;
+
   constructor() {
+    this.cidade = ClimaTempo.clima.cidade
     return ClimaTempo.clima
   }
+  cidade_uf: string;
+
 
   private static async buscaIP(): Promise<ResponseAPIIP | null> {
     try {
@@ -83,7 +99,6 @@ export default class ClimaTempo {
 
       const localizacao = await res.json()
       if (res.status == 200 && res.ok) {
-
         return localizacao.results
       } else throw new Error('Erro ao buscar dados da localizacao')
     } catch (error) {

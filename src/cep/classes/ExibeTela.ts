@@ -21,12 +21,11 @@ export default class ExibeTela {
   private listaBuscados: HTMLElement;
   private exibeDataHora: HTMLSpanElement;
   private exibeClimaTempo: HTMLSpanElement;
-  private geolocalizacao: WindowSessionStorage;
-  private consultaClima: IClimaTempo;
-  private clima: ClimaTempo;
+  private clima: IClimaTempo;
   private periodo: HTMLElement;
   private painelClimaTempo: HTMLDivElement;
   constructor() {
+
     this.dataHora();
     this.adicionaCampos();
     modalInit();
@@ -47,9 +46,9 @@ export default class ExibeTela {
     this.exibeSIAFI = document.querySelector('#siafi');
     this.listaBuscados = document.querySelector('#listaBuscados');
     this.exibeDataHora = document.querySelector('#dataHora');
-    this.exibeClimaTempo = document.querySelector('#climaTempo');
+
     this.periodo = document.querySelector('html');
-    this.painelClimaTempo = document.querySelector('#painelClima');
+   
     return;
   }
   public mostraCEPSelecionado(cep: ICEP) {
@@ -105,34 +104,6 @@ export default class ExibeTela {
     }, 1000);
   }
 
-  // private exibeClima(climaTempo: IClimaTempo) {
-  //   this.exibeClimaTempo.innerText = `${climaTempo.temperatura}ºC`;
-  //   const painel = this.painelClimaTempo;
-  //   console.log(climaTempo.previsao);
-  //   painel.querySelector(
-  //     '#temperatura',
-  //   ).innerHTML = `${climaTempo.temperatura}ºC`;
-  //   painel.querySelector('#cidade_uf').innerHTML = `${climaTempo.cidade_uf}`;
-  //   painel.querySelector('#descricao').innerHTML = `${climaTempo.descricao}`;
-
-  //   climaTempo.previsao.forEach((dia) => {
-  //     const div = document.createElement('div');
-  //     div.classList.add('column');
-
-  //     div.innerHTML = `<p class="bd-notification is-info">${dia.weekday} ${dia.date}</p>
-  //       <div class="columns is-mobile">
-  //         <div class="column">
-  //         <p class="bd-notification is-info">${dia.description}</p>
-  //         <p class="bd-notification is-info">${dia.condition}</p>
-  //         </div>
-  //         <div class="column">
-  //           <p class="bd-notification is-info">Máx: ${dia.max}ºC</p>
-  //           <p class="bd-notification is-info">Mín: ${dia.min}ºC</p>
-  //         </div>
-  //       </div>`;
-  //     painel.querySelector('#previsao').innerHTML += div.outerHTML;
-  //   });
-  // }
 
   public mensagem(Mensagem: IMensagem) {
     const tipo: string = Mensagem.tipo;
