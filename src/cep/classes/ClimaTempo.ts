@@ -1,80 +1,153 @@
+
 import IClimaTempo from '../interfaces/IClimaTempo';
 import ILocal from '../interfaces/ILocal';
 import IPrevisao from '../interfaces/IPrevisao';
-
+interface ResponseAPIPrevisao {
+  cloudiness: number
+  condition: string
+  date: string
+  description: string
+  full_date: string
+  humidity: number
+  max: number
+  min: number
+  moon_phase: string
+  rain: number
+  rain_probability: number
+  sunrise: string
+  sunset: string
+  weekday: string
+  wind_speedy: string
+}
+interface ResponseAPIClima {
+  cid: string
+  city: string
+  city_name: string
+  cloudiness: number
+  condition_code: string
+  condition_slug: string
+  cref: string
+  currently: string
+  date: string
+  description: string
+  forecast: ResponseAPIPrevisao[]
+  humidity: number
+  img_id: string
+  moon_phase: string
+  rain: number
+  sunrise: string
+  sunset: string
+  temp: number
+  time: string
+  timezone: string
+  wind_cardinal: string
+  wind_direction: number
+  wind_speedy: string
+}
+interface ResponseAPIIP {
+  address: string
+  city: string
+  continent: string
+  continent_code: string
+  country: {
+    name: string,
+    code: string,
+    capital: string,
+    flag: {
+      png_16: string
+      svg: string
+    },
+    calling_code: string
+  }
+  country_name: string
+  latitude: number
+  longitude: number
+  region: string
+  region_code: string
+  type: string
+  woeid: number
+}
 export default class ClimaTempo {
-  constructor() {}
-
-  public buscaIP() {
-    fetch(
-      'https://api.hgbrasil.com/geoip?format=json-cors&key=5dc085d0&address=remote&precision=false',
-    )
-      .then((resposta) => resposta.json())
-      .then((localizacao) => {
-        sessionStorage.setItem('localizacao', JSON.stringify(localizacao));
-      })
-      .catch((e) => {
-        throw new Error('Localizaçao não Encontrada');
-      })
-      .finally(() => {
-        const dadosLocal = JSON.parse(sessionStorage.getItem('localizacao'));
-
-        const meuLocal: ILocal = {
-          cidade: dadosLocal.results.city,
-          uf: dadosLocal.results.region,
-          sigla_uf: dadosLocal.results.region_code,
-          pais: dadosLocal.results.country.name,
-          sigla_pais: dadosLocal.results.country.code,
-          woeid: dadosLocal.results.woeid,
-        };
-        this.buscaClicaTempo(meuLocal);
-      });
+  private static dados: ResponseAPIClima | null;
+  private static ip: ResponseAPIIP | null;
+  public static clima: IClimaTempo
+  constructor() {
+    return ClimaTempo.clima
   }
 
-  public buscaClicaTempo(local: ILocal) {
-    fetch(
-      `https://api.hgbrasil.com/weather?format=json-cors&key=5dc085d0&woeid=${local.woeid}`,
-    )
-      .then((resposta) => resposta.json())
-      .then((dadosWeather) => {
-        const forecast: IPrevisao[] = [];
-        dadosWeather.results.forecast.forEach((previsao: any) => {
-          const resultado: IPrevisao = {
-            condicao: previsao.condition,
-            data: previsao.date,
-            descricao: previsao.description,
-            maxima: previsao.max,
-            minima: previsao.min,
-            diaSemana: previsao.weekday,
-          };
-          return forecast.push(previsao);
-        });
+  private static async buscaIP(): Promise<ResponseAPIIP | null> {
+    try {
+      const res = await fetch(
+        'https://api.hgbrasil.com/geoip?format=json-cors&key=5dc085d0&address=remote&precision=false',
+      )
 
-        const ClimaTempo: IClimaTempo = {
-          cidade_uf: dadosWeather.results.city,
-          cidade: dadosWeather.results.city_name,
-          condicao_codigo: dadosWeather.results.condition_code,
-          condicao_slug: dadosWeather.results.condition_slug,
-          previsao: forecast,
-          umidade: dadosWeather.results.humidity,
-          nascerSol: dadosWeather.results.sunrise,
-          porSol: dadosWeather.results.sunset,
-          temperatura: dadosWeather.results.temp,
-          hora: dadosWeather.results.time,
-          velocidadeVento: dadosWeather.results.wind_speedy,
-          data: dadosWeather.results.date,
-          descricao: dadosWeather.results.description,
-        };
-        return ClimaTempo;
-      })
-      .then((ClimaTempo) => {
-        sessionStorage.setItem('clima', JSON.stringify(ClimaTempo));
-      })
-      .catch((Error) => {
-        throw new Error('Não foi possivel buscar o clima');
-      })
-      .finally(() => {
-        const Clima = JSON.parse(sessionStorage.getItem('clima'));
-      });
+      const localizacao = await res.json()
+      if (res.status == 200 && res.ok) {
+
+        return localizacao.results
+      } else throw new Error('Erro ao buscar dados da localizacao')
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
+      return null
+    }
+  }
+
+  private static async buscaDados(local: ResponseAPIIP): Promise<ResponseAPIClima | null> {
+    try {
+      const res = await fetch(
+        `https://api.hgbrasil.com/weather?format=json-cors&key=5dc085d0&woeid=${local.woeid}`,
+      )
+      if (res.status == 200 && res.ok) {
+        const climaTempo = await res.json()
+
+        return climaTempo.results
+      } else {
+        throw new Error('Erro ao buscar dados da localizacao')
+      }
+
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
+      return null
+    }
+  }
+
+  private static climaTempo(dados: ResponseAPIClima): IClimaTempo {
+
+    const forecast: IPrevisao[] = dados.forecast.map((previsao: ResponseAPIPrevisao) => {
+
+      const dados: IPrevisao = { condicao: previsao.condition, data: previsao.full_date, descricao: previsao.description, diaSemana: previsao.weekday, maxima: previsao.max, minima: previsao.min }
+      return dados;
+    });
+
+    return {
+      cidade_uf: dados.city,
+      cidade: dados.city_name,
+      condicao_codigo: dados.condition_code,
+      condicao_slug: dados.condition_slug,
+      previsao: forecast,
+      umidade: dados.humidity,
+      nascerSol: dados.sunrise,
+      porSol: dados.sunset,
+      temperatura: dados.temp,
+      hora: dados.time,
+      velocidadeVento: dados.wind_speedy,
+      data: dados.date,
+      descricao: dados.description,
+    };
+  }
+
+
+  public static async build() {
+    this.ip = await this.buscaIP()
+    if (this.ip) {
+      this.dados = await this.buscaDados(this.ip);
+    }
+    this.clima = this.climaTempo(this.dados)
+
+    return new this()
   }
 }

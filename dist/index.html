@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Exemplo de layout de uma calculadora com SASS e CSS 3">
+    <title>Busca CEP V2</title>
+<script defer="defer" src="runtime.bundle.js"></script><script defer="defer" src="main.bundle.js"></script></head>
+
+<body>
+    <header>
+        <nav class="navbar bg-dark-primary" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    CEP TS
+                </a>
+            </div>
+            <div class="navbar-end">
+                <div class="dropdown" id="painelClimaHora">
+                    <div class="navbar-item dropdown-trigger" id="triggerClimaHora">
+                        <p class="" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span id="climaTempo"></span>
+                            <span id="dataHora"></span>
+                            <span class="icon is-small">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content" id="painelClima">
+                            <div class="dropdown-item">
+                                <p id="cidade_uf"></p>
+                                <p id="temperatura">
+                                </p><p>
+                                </p><p id="descricao"></p>
+
+                            </div>
+                            <hr class="dropdown-divider">
+                            <div class="dropdown-item">
+                                <div class="columns" id="previsao">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <button class="button" id="limpaTela">
+                            <strong>Limpar Tela</strong>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+            
+        </nav>
+    </header>
+    <main>
+    <section class="hero bg-light-primary-color">
+        <div class="hero-body">
+            <p class="title" id="exibeCEP">
+                00000-999
+            </p>
+            <p class="subtitle">
+                Voce está visualizando as informaçoes do CEP acima
+            </p>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="field has-addons has-addons-centered">
+                <p class="control">
+                    <span class="select">
+                        <select id="opcoesBusca">
+                        </select>
+                    </span>
+                </p>
+                <p class="control">
+                    <input class="input" type="text" placeholder="Insira seu CEP" id="cep" maxlength="9">
+                </p>
+                <p class="control">
+                    <a class="button" id="buscar">
+                        Buscar
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="is-horizontal">
+                <div class="field-body">
+
+                    <div class="field">
+                        <label class="label">Logradouro</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="Logradouro" id="logradouro" readonly="readonly">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Complemento</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Complemento" id="complemento" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="field-body">
+
+                    <div class="field">
+                        <label class="label">Bairro</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="Bairro" id="bairro" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Localidade</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Localidade" id="localidade" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">UF</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="UF" id="uf" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="field-body">
+
+
+                    <div class="field">
+                        <label class="label">IBGE</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="IBGE" id="ibge" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">GIA</label>
+                        <div class="control is-8">
+                            <input class="input" type="text" placeholder="GIA" id="gia" readonly="readonly">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">DDD</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="DDD" id="ddd" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Siafi</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Siafi" id="siafi" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <article class="panel" id="listaBuscados">
+                <p class="panel-heading bg-primary-color secondary-text message-header">
+                    Buscados anteriormente
+                    <span class="tag">
+                        click 1x (ver) 2x (remover)
+                    </span>
+                    <button class="delete is-large" id="deletaTodos"></button>
+
+                </p>
+
+            </article>
+        </div>
+    </section>
+</main>
+    <footer class="footer bg-dark-primary">
+        <div class="content has-text-centered">
+            <p class="">
+                <strong>Busca CEP v2</strong> by <a href="https://github.com/SamuelMBote/">SamuelMBote</a>. Quebrando a cabeça com TypeScript.
+            </p>
+        </div>
+        <div class="content has-text-centered">
+
+
+Tema
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select>
+      <option selected="selected">Light</option>
+      <option>Dark</option>
+
+    </select>
+  </div>
+  <span class="icon is-small is-left">
+    <i class="fas fa-globe"></i>
+  </span>
+</div>
+        </div>
+    </footer>
+</body>
+
+<div class="modal" id="modalAviso">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <article class="message">
+            <div class="message-header">
+                <p id="tituloMensagem">Hello World</p>
+            </div>
+            <div class="message-body">
+                <p id="modalMensagem">Todos os CEP buscados anteriormente foram deletados</p>
+            </div>
+        </article>
+    </div>
+</div>
+
+
+</html>

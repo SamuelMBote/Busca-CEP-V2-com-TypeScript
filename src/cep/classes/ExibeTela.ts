@@ -30,12 +30,7 @@ export default class ExibeTela {
     this.dataHora();
     this.adicionaCampos();
     modalInit();
-    this.clima = new ClimaTempo();
-    this.geolocalizacao = JSON.parse(sessionStorage.getItem('localizacao'));
-    if (!this.geolocalizacao) this.clima.buscaIP();
-    this.consultaClima = JSON.parse(sessionStorage.getItem('clima'));
-    this.exibeClima.bind(this);
-    this.exibeClima(this.consultaClima);
+
     this.exibeItemHistorico.bind(this);
   }
 
@@ -110,34 +105,34 @@ export default class ExibeTela {
     }, 1000);
   }
 
-  private exibeClima(climaTempo: IClimaTempo) {
-    this.exibeClimaTempo.innerText = `${climaTempo.temperatura}ºC`;
-    const painel = this.painelClimaTempo;
-    console.log(climaTempo.previsao);
-    painel.querySelector(
-      '#temperatura',
-    ).innerHTML = `${climaTempo.temperatura}ºC`;
-    painel.querySelector('#cidade_uf').innerHTML = `${climaTempo.cidade_uf}`;
-    painel.querySelector('#descricao').innerHTML = `${climaTempo.descricao}`;
+  // private exibeClima(climaTempo: IClimaTempo) {
+  //   this.exibeClimaTempo.innerText = `${climaTempo.temperatura}ºC`;
+  //   const painel = this.painelClimaTempo;
+  //   console.log(climaTempo.previsao);
+  //   painel.querySelector(
+  //     '#temperatura',
+  //   ).innerHTML = `${climaTempo.temperatura}ºC`;
+  //   painel.querySelector('#cidade_uf').innerHTML = `${climaTempo.cidade_uf}`;
+  //   painel.querySelector('#descricao').innerHTML = `${climaTempo.descricao}`;
 
-    climaTempo.previsao.forEach((dia) => {
-      const div = document.createElement('div');
-      div.classList.add('column');
+  //   climaTempo.previsao.forEach((dia) => {
+  //     const div = document.createElement('div');
+  //     div.classList.add('column');
 
-      div.innerHTML = `<p class="bd-notification is-info">${dia.weekday} ${dia.date}</p>
-        <div class="columns is-mobile">
-          <div class="column">
-          <p class="bd-notification is-info">${dia.description}</p>
-          <p class="bd-notification is-info">${dia.condition}</p>
-          </div>
-          <div class="column">
-            <p class="bd-notification is-info">Máx: ${dia.max}ºC</p>
-            <p class="bd-notification is-info">Mín: ${dia.min}ºC</p>
-          </div>
-        </div>`;
-      painel.querySelector('#previsao').innerHTML += div.outerHTML;
-    });
-  }
+  //     div.innerHTML = `<p class="bd-notification is-info">${dia.weekday} ${dia.date}</p>
+  //       <div class="columns is-mobile">
+  //         <div class="column">
+  //         <p class="bd-notification is-info">${dia.description}</p>
+  //         <p class="bd-notification is-info">${dia.condition}</p>
+  //         </div>
+  //         <div class="column">
+  //           <p class="bd-notification is-info">Máx: ${dia.max}ºC</p>
+  //           <p class="bd-notification is-info">Mín: ${dia.min}ºC</p>
+  //         </div>
+  //       </div>`;
+  //     painel.querySelector('#previsao').innerHTML += div.outerHTML;
+  //   });
+  // }
 
   public mensagem(Mensagem: IMensagem) {
     const tipo: string = Mensagem.tipo;

@@ -6,8 +6,8 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "target": "ES6",
+    "target": "ESNext",
     "allowJs": true,
-    "lib": ["es2017", "DOM"]
+    "lib": ["ESNext", "DOM"]
   }
 }

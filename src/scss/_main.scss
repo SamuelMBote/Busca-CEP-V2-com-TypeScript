@@ -1,4 +1,4 @@
-[data-theme='night'] {
+[data-theme='light'] {
   --dark-primary-color: #ffa500; /* Laranja suave, representando o sol */
   --light-primary-color: #ffeb99; /* Amarelo suave, imitando o brilho do sol */
   --primary-color: #ffca28; /* Amarelo dourado mais suave */
@@ -7,9 +7,9 @@
   --primary-text: #424242; /* Cinza escuro suave para texto principal */
   --secondary-text: #9e9e9e; /* Cinza médio para texto secundário */
   --divider-color: #e0e0e0; /* Cinza claro para divisores */
-  body {
-    background-color: white;
-  }
+  // body {
+  //   background-color: white;
+  // }
 }
 [data-theme='dark'] {
   --dark-primary-color: #283593; /* Azul escuro suave, como o céu noturno */
@@ -20,9 +20,9 @@
   --primary-text: #e0e0e0; /* Cinza claro suave para texto principal */
   --secondary-text: #b0bec5; /* Cinza muito claro para texto secundário */
   --divider-color: #616161; /* Cinza escuro suave para divisores */
-  body {
-    background-color: black;
-  }
+  // body {
+  //   background-color: black;
+  // }
 }
 .mesage-header {
   .is-danger {

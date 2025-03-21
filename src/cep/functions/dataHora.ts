@@ -19,9 +19,9 @@ export function periodoDia(): string {
   const horario: Date = new Date();
   const momento = horario.toLocaleTimeString('pt-BR');
   if (momento >= '06:00' && momento <= '18:00') {
-    periodo = 'day';
+    periodo = 'light';
   } else {
-    periodo = 'night';
+    periodo = 'dark';
   }
   return periodo;
 }
