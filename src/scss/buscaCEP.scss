@@ -1,5 +1,6 @@
 @charset "utf-8";
 
 /*Bulma*/
-@import './node_modules/bulma/bulma.sass';
-@import 'main';
+@use 'bulma/css/bulma.css';
+
+@use 'main';

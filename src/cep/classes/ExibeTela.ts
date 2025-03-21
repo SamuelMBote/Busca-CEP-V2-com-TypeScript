@@ -1,11 +1,11 @@
-import {dataHora, periodoDia} from '../functions/dataHora';
+import { dataHora, periodoDia } from '../functions/dataHora';
 import ICEP from '../interfaces/ICEP';
 import modalInit from '../functions/modalInit';
 import IMensagem from '../interfaces/IMensagem';
 import ClimaTempo from './ClimaTempo';
 import IClimaTempo from '../interfaces/IClimaTempo';
-import IPrevisao from '../interfaces/IPrevisao';
-import {node} from 'webpack';
+
+
 
 export default class ExibeTela {
   private exibeCEP: HTMLParagraphElement;

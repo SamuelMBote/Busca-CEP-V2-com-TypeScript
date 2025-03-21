@@ -1,4 +1,4 @@
-import IPrevisao from './IPrevisao';
+
 
 export default interface IClimaTempo {
   cidade_uf: string;

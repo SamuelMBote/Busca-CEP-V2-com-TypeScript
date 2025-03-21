@@ -1,22 +1,28 @@
 [data-theme='night'] {
-  --dark-primary-color: #303f9f;
-  --light-primary-color: #c5cae9;
-  --primary-color: #3f51b5;
-  --text-icons: #ffffff;
-  --accent-color: #9e9e9e;
-  --primary-text: #757575;
-  --secondary-text: #212121;
-  --divider-color: #bdbdbd;
+  --dark-primary-color: #ffa500; /* Laranja suave, representando o sol */
+  --light-primary-color: #ffeb99; /* Amarelo suave, imitando o brilho do sol */
+  --primary-color: #ffca28; /* Amarelo dourado mais suave */
+  --text-icons: #212121; /* Preto suave para texto e ícones */
+  --accent-color: #64b5f6; /* Verde suave para detalhes */
+  --primary-text: #424242; /* Cinza escuro suave para texto principal */
+  --secondary-text: #9e9e9e; /* Cinza médio para texto secundário */
+  --divider-color: #e0e0e0; /* Cinza claro para divisores */
+  body {
+    background-color: white;
+  }
 }
-[data-theme='day'] {
-  --dark-primary-color: #0288d1;
-  --light-primary-color: #b3e5fc;
-  --primary-color: #03a9f4;
-  --text-icons: #ffffff;
-  --accent-color: #ffc107;
-  --primary-text: #212121;
-  --secondary-text: #757575;
-  --divider-color: #bdbdbd;
+[data-theme='dark'] {
+  --dark-primary-color: #283593; /* Azul escuro suave, como o céu noturno */
+  --light-primary-color: #7e57c2; /* Roxo suave e sereno, como as estrelas distantes */
+  --primary-color: #ff7043; /* Laranja suave, lembrando as estrelas de uma noite calma */
+  --text-icons: #ffffff; /* Branco suave para texto e ícones */
+  --accent-color: #5c6bc0; /* Azul calmo para detalhes sutis */
+  --primary-text: #e0e0e0; /* Cinza claro suave para texto principal */
+  --secondary-text: #b0bec5; /* Cinza muito claro para texto secundário */
+  --divider-color: #616161; /* Cinza escuro suave para divisores */
+  body {
+    background-color: black;
+  }
 }
 .mesage-header {
   .is-danger {
@@ -25,15 +31,14 @@
   }
 }
 
-p {
-  color: var(--primary-text);
+p,
+label {
+  color: var(--primary-text) !important;
 }
 a {
   color: var(--text-icons);
 }
-.navbar-item p {
-  cursor: pointer;
-}
+
 .bg-dark-primary {
   background-color: var(--dark-primary-color);
 }
@@ -50,9 +55,33 @@ a {
 
 .button {
   background-color: var(--accent-color);
-  color: var(--dark-primary-color);
 }
 #listaBuscados a:last-child {
   background-color: var(--primary-color);
   color: var(--text-icons);
+}
+.title {
+  color: var(--primary-text);
+  font-size: 2rem;
+}
+.subtitle {
+  color: var(--secondary-text);
+  font-size: 1rem;
+}
+.navbar-item {
+  color: var(--primary-text);
+  font-size: large;
+  font-family: monospace;
+  &:hover {
+    background-color: inherit;
+  }
+  p {
+    cursor: pointer;
+  }
+}
+input {
+  background-color: transparent !important;
+  &::placeholder {
+    color: var(--secondary-text) !important;
+  }
 }

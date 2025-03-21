@@ -47,14 +47,6 @@ export default function modalInit() {
       },
     );
 
-    // Add a keyboard event to close all modals
-    document.addEventListener('keydown', (Event) => {
-      const e = Event || window.event;
 
-      /*if (e.keyCode === 27) {
-        // Escape key
-        closeAllModals();
-      }*/
-    });
   });
 }

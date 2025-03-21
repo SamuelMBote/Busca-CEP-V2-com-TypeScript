@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" data-theme="night">
+<html lang="pt-br" data-theme="light">
 
 <head>
     <meta charset="UTF-8" />
@@ -7,21 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Exemplo de layout de uma calculadora com SASS e CSS 3" />
     <title>Busca CEP V2</title>
-
 </head>
 
 <body>
     <header>
         <nav class="navbar bg-dark-primary" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="https://bulma.io">
-                    <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, and modern CSS framework based on Flexbox" width="112" height="28">
-                </a>
-
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
+                <a class="navbar-item" href="/">
+                    CEP TS
                 </a>
             </div>
             <div class="navbar-end">
@@ -65,10 +58,11 @@
             </div>
         </nav>
     </header>
+    <main>
     <section class="hero bg-light-primary-color">
         <div class="hero-body">
             <p class="title" id="exibeCEP">
-                00000-000
+                00000-999
             </p>
             <p class="subtitle">
                 Voce está visualizando as informaçoes do CEP acima
@@ -181,12 +175,29 @@
 
             </article>
         </div>
-    </section>
+    </section></main>
     <footer class="footer bg-dark-primary ">
         <div class="content has-text-centered">
             <p class="">
                 <strong>Busca CEP v2</strong> by <a href=" https://github.com/SamuelMBote/">SamuelMBote</a>. Quebrando a cabeça com TypeScript</a>.
             </p>
+        </div>
+        <div class="content has-text-centered">
+
+
+Tema
+<div class="control has-icons-left">
+  <div class="select is-small">
+    <select>
+      <option selected>Light</option>
+      <option>Dark</option>
+
+    </select>
+  </div>
+  <span class="icon is-small is-left">
+    <i class="fas fa-globe"></i>
+  </span>
+</div>
         </div>
     </footer>
 </body>
@@ -204,6 +215,6 @@
         </article>
     </div>
 </div>
-</div>
+
 
 </html>
