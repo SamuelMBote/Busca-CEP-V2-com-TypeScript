@@ -1,5 +1,5 @@
 export default interface IMensagem {
-  tipo: string;
+  tipo: 'erro' | 'aviso' | 'sucesso' | 'info';
   titulo: string;
   conteudo: string;
 }

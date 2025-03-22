@@ -1,9 +1,8 @@
 import ExibeTela from './ExibeTela';
-import consultaAPI from '../functions/consultaViaCEP';
+
 import ICEP from '../interfaces/ICEP';
 export default class ControlesBusca {
-  public opcoesBusca: string[];
-  private botaoCEP: HTMLButtonElement;
+
   private cepInput: HTMLInputElement;
   private selectOpcao: HTMLSelectElement;
   private deletaTodos: HTMLButtonElement;
@@ -16,54 +15,28 @@ export default class ControlesBusca {
   constructor(Tela: ExibeTela) {
     this.Tela = Tela;
     this.Tela.onInit();
-    this.opcoesBusca = ['json', 'jsonp', 'xml'];
-    this.preencheSelectOpcoes();
     this.eventoInputCEP();
-    this.eventoBotaoBuscarCEP();
+    // this.eventoBotaoBuscarCEP();
     this.deletaAnteriores();
     this.eventoLimparTela();
     this.mostrarDetalhesClimaHorario();
   }
 
-  private preencheSelectOpcoes() {
-    this.selectOpcao = document.querySelector('#opcoesBusca');
-    this.opcoesBusca.forEach((opcao) => {
-      let option: HTMLOptGroupElement = document.createElement('option');
-      option.setAttribute('value', opcao.toString().toLowerCase());
-      option.innerText = opcao.toString().toUpperCase();
-      this.selectOpcao.appendChild(option);
-    });
-    this.selectOpcao[0].setAttribute('selected', '');
-  }
+
 
   private eventoInputCEP(): void {
     this.cepInput = document.querySelector('#cep');
     this.cepInput.addEventListener('keyup', () => {
-      this.cepInput.value = this.cepInput.value.replace(/([^0-9])/gi, '');
-      const arrayCEP = Array.from(this.cepInput.value);
-      arrayCEP.length >= 6 ? arrayCEP.splice(5, 0, '-') : arrayCEP;
-      this.cepInput.value = String(arrayCEP.join(''));
+      let cep = this.cepInput.value.replace(/\D/g, ''); // Remove tudo que não for número
+
+      if (cep.length > 5) {
+        cep = `${cep.slice(0, 5)}-${cep.slice(5, 8)}`; // Insere o hífen na posição correta
+      }
+
+      this.cepInput.value = cep;
     });
   }
 
-  private eventoBotaoBuscarCEP(): void {
-    this.botaoCEP = document.querySelector('#buscar');
-    this.botaoCEP.addEventListener('click', () => {
-      const cep = this.cepInput.value;
-      const opcao = this.selectOpcao.value;
-      if (cep && cep.replace(/([^0-9])/gi, '').length == 8) {
-        consultaAPI(cep.replace(/([^0-9])/gi, ''), opcao, this.Tela);
-        this.cepInput.value = '';
-        this.cepInput.focus();
-      } else {
-        this.Tela.mensagem({
-          conteudo: 'Insira um CEP válido',
-          titulo: 'CEP incorreto!',
-          tipo: 'erro',
-        });
-      }
-    });
-  }
 
   private eventoLimparTela() {
     this.limpaTela = document.querySelector('#limpaTela');

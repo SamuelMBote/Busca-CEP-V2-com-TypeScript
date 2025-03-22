@@ -68,9 +68,10 @@ interface ResponseAPIIP {
   woeid: number
 }
 export default class ClimaTempo implements IClimaTempo {
-  private static dados: ResponseAPIClima | null;
-  private static ip: ResponseAPIIP | null;
-  private static clima: IClimaTempo
+  private dados: ResponseAPIClima | null;
+  private ip: ResponseAPIIP | null;
+  private clima: IClimaTempo
+  cidade_uf: string;
   cidade: string;
   condicao_codigo: string;
   condicao_slug: string;
@@ -85,31 +86,29 @@ export default class ClimaTempo implements IClimaTempo {
   velocidadeVento: string;
 
   constructor() {
-    this.cidade = ClimaTempo.clima.cidade
-    return ClimaTempo.clima
+    this.build()
   }
-  cidade_uf: string;
 
 
-  private static async buscaIP(): Promise<ResponseAPIIP | null> {
+
+  private async buscaIP(): Promise<ResponseAPIIP | null> {
     try {
       const res = await fetch(
         'https://api.hgbrasil.com/geoip?format=json-cors&key=5dc085d0&address=remote&precision=false',
       )
-
       const localizacao = await res.json()
       if (res.status == 200 && res.ok) {
         return localizacao.results
       } else throw new Error('Erro ao buscar dados da localizacao')
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        console.error(error)
       }
       return null
     }
   }
 
-  private static async buscaDados(local: ResponseAPIIP): Promise<ResponseAPIClima | null> {
+  private async buscaDados(local: ResponseAPIIP): Promise<ResponseAPIClima | null> {
     try {
       const res = await fetch(
         `https://api.hgbrasil.com/weather?format=json-cors&key=5dc085d0&woeid=${local.woeid}`,
@@ -130,39 +129,78 @@ export default class ClimaTempo implements IClimaTempo {
     }
   }
 
-  private static climaTempo(dados: ResponseAPIClima): IClimaTempo {
+  private climaTempo(dados: ResponseAPIClima): IClimaTempo | null {
 
-    const forecast: IPrevisao[] = dados.forecast.map((previsao: ResponseAPIPrevisao) => {
+    const forecast: IPrevisao[] = dados && dados.forecast.map((previsao: ResponseAPIPrevisao) => {
 
-      const dados: IPrevisao = { condicao: previsao.condition, data: previsao.full_date, descricao: previsao.description, diaSemana: previsao.weekday, maxima: previsao.max, minima: previsao.min }
-      return dados;
+      const info: IPrevisao = { condicao: previsao.condition, data: previsao.full_date, descricao: previsao.description, diaSemana: previsao.weekday, maxima: previsao.max, minima: previsao.min }
+      return info;
     });
+    if (dados)
+      return {
+        cidade_uf: dados.city,
+        cidade: dados.city_name,
+        condicao_codigo: dados.condition_code,
+        condicao_slug: dados.condition_slug,
+        previsao: forecast,
+        umidade: dados.humidity,
+        nascerSol: dados.sunrise,
+        porSol: dados.sunset,
+        temperatura: dados.temp,
+        hora: dados.time,
+        velocidadeVento: dados.wind_speedy,
+        data: dados.date,
+        descricao: dados.description,
+      };
+    else return null
+  }
+  private async exibeClima() {
+    const exibeClimaTempo: HTMLSpanElement = document.querySelector('#climaTempo');
+    const painelClimaTempo: HTMLDivElement = document.querySelector('#painelClima');
+    if (this.clima) {
 
-    return {
-      cidade_uf: dados.city,
-      cidade: dados.city_name,
-      condicao_codigo: dados.condition_code,
-      condicao_slug: dados.condition_slug,
-      previsao: forecast,
-      umidade: dados.humidity,
-      nascerSol: dados.sunrise,
-      porSol: dados.sunset,
-      temperatura: dados.temp,
-      hora: dados.time,
-      velocidadeVento: dados.wind_speedy,
-      data: dados.date,
-      descricao: dados.description,
-    };
+      const clima: IClimaTempo = this.clima
+
+      exibeClimaTempo.innerText = `${clima.temperatura}ºC`;
+      painelClimaTempo;
+
+      painelClimaTempo.querySelector(
+        '#temperatura',
+      ).innerHTML = `${clima.temperatura}ºC`;
+      painelClimaTempo.querySelector('#cidade_uf').innerHTML = `${clima.cidade_uf}`;
+      painelClimaTempo.querySelector('#descricao').innerHTML = `${clima.descricao}`;
+
+      clima?.previsao?.forEach((dia) => {
+        if (dia) {
+          const div = document.createElement('div');
+          div.classList.add('column');
+
+          div.innerHTML = `<p class="bd-notification is-info">${dia.diaSemana} ${dia.data}</p>
+          <div class="columns is-mobile">
+            <div class="column">
+            <p class="bd-notification is-info">${dia.descricao}</p>
+            <p class="bd-notification is-info">${dia.condicao}</p>
+            </div>
+            <div class="column">
+              <p class="bd-notification is-info">Máx: ${dia.maxima}ºC</p>
+              <p class="bd-notification is-info">Mín: ${dia.minima}ºC</p>
+            </div>
+          </div>`;
+          painelClimaTempo.querySelector('#previsao').innerHTML += div.outerHTML;
+        }
+      });
+    } else {
+      painelClimaTempo.style.display = 'none'
+    }
   }
 
-
-  public static async build() {
+  public async build() {
     this.ip = await this.buscaIP()
     if (this.ip) {
       this.dados = await this.buscaDados(this.ip);
     }
     this.clima = this.climaTempo(this.dados)
 
-    return new this()
+    this.exibeClima()
   }
 }

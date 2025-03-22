@@ -4,10 +4,12 @@ import modalInit from '../functions/modalInit';
 import IMensagem from '../interfaces/IMensagem';
 import ClimaTempo from './ClimaTempo';
 import IClimaTempo from '../interfaces/IClimaTempo';
+import CEP from './CEP';
 
 
-
+type OpcoesBusca = 'json' | 'xml' | 'jsonp'
 export default class ExibeTela {
+  private opcoesBusca = ['json', 'jsonp', 'xml'];
   private exibeCEP: HTMLParagraphElement;
   private exibeLogradouro: HTMLInputElement;
   private exibeComplemento: HTMLInputElement;
@@ -48,7 +50,7 @@ export default class ExibeTela {
     this.exibeDataHora = document.querySelector('#dataHora');
 
     this.periodo = document.querySelector('html');
-   
+
     return;
   }
   public mostraCEPSelecionado(cep: ICEP) {
@@ -104,21 +106,59 @@ export default class ExibeTela {
     }, 1000);
   }
 
+  private mascaraCEPInput(): void {
+    document.querySelector('#cep').addEventListener('keyup', (event) => {
+      if (event.target instanceof HTMLInputElement) {
+        let cep = event.target?.value?.replace(/\D/g, ''); // Remove tudo que não for número
+        if (cep.length > 5) {
+          cep = `${cep.slice(0, 5)}-${cep.slice(5, 8)}`; // Insere o hífen na posição correta
+        }
+        event.target.value = cep;
+      }
+    });
+  }
+  private eventoBotaoBuscarCEP(): void {
+    const cep = document.querySelector('#cep');
+    const opcao = document.querySelector('#opcoesBusca');
+    document.querySelector('#buscar').addEventListener('click', (event) => {
 
-  public mensagem(Mensagem: IMensagem) {
-    const tipo: string = Mensagem.tipo;
+      if (cep instanceof HTMLInputElement && opcao instanceof HTMLSelectElement) {
+        if (cep.value && cep.value.replace(/([^0-9])/gi, '').length == 8) {
+
+          const consulta = new CEP(cep.value, opcao.value as OpcoesBusca)
+          console.log(consulta)
+          cep.value = '';
+          cep.focus();
+        } else {
+          this.mensagem({
+            conteudo: 'Insira um CEP válido',
+            titulo: 'CEP incorreto!',
+            tipo: 'erro',
+          });
+        }
+      }
+    });
+  }
+  private preencheSelectOpcoes() {
+    const opcoes = document.querySelector('#opcoesBusca');
+    this.opcoesBusca.forEach((opcao) => {
+      let option: HTMLOptGroupElement = document.createElement('option');
+      option.setAttribute('value', opcao.toString().toLowerCase());
+      option.innerText = opcao.toString().toUpperCase();
+      opcoes.appendChild(option);
+    });
+    opcoes[0].setAttribute('selected', '');
+  }
+
+  public mensagem(mensagem: IMensagem) {
+    const modal: HTMLDivElement = document.querySelector('#modalAviso'), modalTitle: HTMLParagraphElement =
+      modal.querySelector('#tituloMensagem'), modalContent: HTMLParagraphElement =
+        modal.querySelector('#modalMensagem'), modalMessage = modal.querySelector('.message')
     let classe: string;
-    const modal: HTMLDivElement = document.querySelector('#modalAviso');
-    const modalTitle: HTMLParagraphElement =
-      modal.querySelector('#tituloMensagem');
-    const modalContent: HTMLParagraphElement =
-      modal.querySelector('#modalMensagem');
-    const modalMessage = modal.querySelector('.message');
 
-    switch (tipo) {
+    switch (mensagem.tipo) {
       case 'erro':
         classe = 'is-danger';
-
         break;
       case 'aviso':
         classe = 'is-warning';
@@ -132,23 +172,22 @@ export default class ExibeTela {
     }
     modal.classList.add('is-active');
 
-    while (modalMessage.classList.length > 0) {
-      modalMessage.classList.remove(modalMessage.classList.item(0));
-    }
+    modalMessage.classList.remove('message', classe);
     modalMessage.classList.add('message', classe);
 
-    modalTitle.innerText = Mensagem.titulo;
-    modalContent.innerText = Mensagem.conteudo;
+    modalTitle.innerText = mensagem.titulo;
+    modalContent.innerText = mensagem.conteudo;
 
     navigator.vibrate(300);
   }
 
-  public onClick(novoCEP: ICEP, index: number) {
-    this.mostraCEPSelecionado(novoCEP);
-    this.listarAnteriores(novoCEP, index);
-  }
+  // public onClick(novoCEP: ICEP, index: number) {
+  //   this.mostraCEPSelecionado(novoCEP);
+  //   this.listarAnteriores(novoCEP, index);
+  // }
 
-  public onInit() {
+  public async onInit() {
+    this.eventoBotaoBuscarCEP()
     this.adicionaCampos();
     this.exibeDataHora.innerText = dataHora();
     this.periodo.dataset.theme = periodoDia();
